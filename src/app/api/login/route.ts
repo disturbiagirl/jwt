@@ -3,6 +3,7 @@ import validatePassword from "@/app/helpers/validatePassword";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import * as jose from "jose";
 
 export async function POST(request: Request) {
   // Read data off req body
@@ -48,7 +49,16 @@ export async function POST(request: Request) {
 
   // Create jwt token
 
+  const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+  const alg = "HS256";
+
+  const jwt = await new jose.SignJWT({})
+    .setProtectedHeader({ alg })
+    .setExpirationTime("72h")
+    .setSubject(user.id.toString())
+    .sign(secret);
+
   // Respond with it
 
-  return Response;
+  return NextResponse.json({ token: jwt });
 }
