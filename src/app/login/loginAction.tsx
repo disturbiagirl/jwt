@@ -30,7 +30,7 @@ export default async function loginAction(
     sameSite: "strict",
   });
 
-  // Redirect to login if success
+  // Redirect to protected if success
   if (res.ok) {
     redirect("/protected");
   } else {
